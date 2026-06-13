@@ -8,7 +8,22 @@ const jwt = require('jsonwebtoken');
 
 const app = express();
 app.use(cookieParser());
-app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:3000', credentials: true }));
+app.use(cors({
+  origin: function(origin, callback) {
+    const allowedOrigins = [
+      'https://marketmind-semester-project.vercel.app',
+      'https://marketmind-semester-project-ap1vg17xk-aleem-s-projects3.vercel.app',
+      'http://localhost:3000',
+      'http://localhost:5173'
+    ];
+    if (!origin || allowedOrigins.includes(origin) || origin.includes('vercel.app')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
 app.use(express.json({ limit: '10mb' }));
 
 // ===== INLINE AUTH MIDDLEWARE =====
